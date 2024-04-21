@@ -57,17 +57,6 @@ def SENSOR_LOCATION(sensor_file, Nslice, x_scale, y_scale, z_scale):
 		z_data = (z_data/z_scale).reshape(-1, 1)
 
 	return x_data, y_data, z_data
-
-def CDS(x, P):										# PRESSURE GRADIENT CALCULATION
-	dP_dx = torch.zeros_like(x)
-
-	dP_dx [0] = ( P[1] - P[0] ) / (x[1] - x[0])
-	dP_dx [-1] = ( P[-1] - P[-2] ) / (x[-1] - x[-2])
-
-	for i in range(1, x.shape[0]-1):
-		dP_dx [i] = ( P[i+1] - P[i-1] ) / (x[i+1] - x[i-1])
-
-	return dP_dx
 	
 def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_data, y_data, z_data, P_data, x_scale,	y_scale, z_scale, P_max, P_min, 
 	vel_scale, density, diffusion, Nslice, learning_rate, learn_rate_a,	step_epoch, step_eph_a, decay_rate, batchsize, epochs, 
@@ -90,10 +79,6 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_data, y_data, z_dat
 	P_data   = torch.Tensor(P_data).to(processor)
 
 	# INLET PROFILE
-	x_inlet  = np.array ([0.685318/x_scale]).reshape (-1, 1)
-	y_inlet  = np.array ([1.38312 /y_scale]).reshape (-1, 1)
-	z_inlet  = np.array ([1.55397 /z_scale]).reshape (-1, 1)
-
 	x_inlet  = torch.Tensor(x_inlet).to(processor)
 	y_inlet  = torch.Tensor(y_inlet).to(processor)
 	z_inlet  = torch.Tensor(z_inlet).to(processor)
@@ -108,23 +93,6 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_data, y_data, z_dat
 	del x, y, z
 
 	# ******************************************** NEURAL NETWORK **************************************************** #
-
-	def SAMPLING_DATA(epoch, x_data, y_data, z_data, P_data, U_data):
-		n = (epoch // 500) + 1
-		XD = x_data [0: n]
-		YD = y_data [0: n]
-		ZD = z_data [0: n]
-		PD = P_data [0: n]
-		UD = U_data [0: n]
-		
-		return XD, YD, ZD, PD, UD
-
-	# GATE NETWORKS FUNCTION
-	def GATE_X(x):
-		return 0.50*(torch.erf(10.0* (x - 0.28)) + 1.0)
-
-	def GATE_Y(y):
-		return 0.50*(torch.erf(10.0* (y)) + 1.0) 
 
 	# ADAPTIVE ACTIVATION FUNCTION
 	class CUSTOM_SiLU(nn.Module):																		
