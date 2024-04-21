@@ -130,9 +130,9 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_scale,	y_scale, z_s
 	z = torch.Tensor(z).to(processor)
 	
 	# INLET PROFILE
-	x_inlet  = np.array ([0.693579 /x_scale]).reshape (-1, 1)
-	y_inlet  = np.array ([1.387520 /y_scale]).reshape (-1, 1)
-	z_inlet  = np.array ([1.554370 /z_scale]).reshape (-1, 1)
+	x_inlet  = np.array ([0.065538 /x_scale]).reshape (-1, 1)
+	y_inlet  = np.array ([0.140971 /y_scale]).reshape (-1, 1)
+	z_inlet  = np.array ([0.152358 /z_scale]).reshape (-1, 1)
 
 	x_inlet  = torch.Tensor(x_inlet).to(processor)
 	y_inlet  = torch.Tensor(y_inlet).to(processor)
@@ -530,11 +530,18 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_scale,	y_scale, z_s
 # **************************************** NEURAL NETWORK COMPUTATION *********************************************** #
 
 	if (Flag_Resume):
-		print('READING THE TRAINED DATA OF NET I ..... \n')
-		U_NN.load_state_dict(torch.load(path + "U_velocity.pt"))
-		V_NN.load_state_dict(torch.load(path + "V_Velocity.pt"))
-		W_NN.load_state_dict(torch.load(path + "W_Velocity.pt"))
-		P_NN.load_state_dict(torch.load(path + "Pressure.pt"))
+
+		print('\n READING THE TRAINED MODEL OF THE LAST TIME INSTANT \n')
+		U_NN.load_state_dict(torch.load(path + "U_velocity" + "_M_" + str(end_file) + "_cycle_IV" +".pt"))
+		V_NN.load_state_dict(torch.load(path + "V_Velocity" + "_M_" + str(end_file) + "_cycle_IV" +".pt"))
+		W_NN.load_state_dict(torch.load(path + "W_Velocity" + "_M_" + str(end_file) + "_cycle_IV" +".pt"))
+		P_NN.load_state_dict(torch.load(path + "Pressure" + "_M_" + str(end_file) + "_cycle_IV" +".pt"))
+
+		au1 = torch.load(path + "AAF_AUE" + "_M_"+ str(end_file) + "_cycle_IV" +".pt").to(processor)
+		av1 = torch.load(path + "AAF_AVE" + "_M_"+ str(end_file) + "_cycle_IV" +".pt").to(processor)
+		aw1 = torch.load(path + "AAF_AWE" + "_M_"+ str(end_file) + "_cycle_IV" +".pt").to(processor)
+		ap1 = torch.load(path + "AAF_APE" + "_M_"+ str(end_file) + "_cycle_IV" +".pt").to(processor)
+		print ("*"*85)
 
 #--------------------------------- MARCHED SOLUTION OF NEURAL NETWORK COMPUTATION -------------------------------------#
 	for mod in range (start_file, end_file+1):
@@ -542,7 +549,7 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_scale,	y_scale, z_s
 		# ****** ADAPTIVE WEIGHTS FOR THE LOSS FUNCTIONS
 		W_NSE   = Parameter(torch.tensor(5.0))					# NAVIER STOKES EQUATION
 		W_CONT  = Parameter(torch.tensor(2.0))					# CONTINUITY EQUATION
-		W_BC    = Parameter(torch.tensor(3.0))					# NOSLIP BOUNDARY CONDITION
+		W_BC    = Parameter(torch.tensor(5.0))					# NOSLIP BOUNDARY CONDITION
 		W_DATA  = Parameter(torch.tensor(5.0))					# SENSOR DATA
 		W_INLET = Parameter(torch.tensor(2.0))					# INLET DATA
 
@@ -614,7 +621,8 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_scale,	y_scale, z_s
 
 		epoch      = 0
 		total_loss = 1.0
-		while (epoch < epochs) and (total_loss > 2e-4):
+
+		while (epoch < epochs) and (total_loss > 3.5e-4):
 			loss_nse   = 0.
 			loss_bc    = 0.
 			loss_data  = 0.
@@ -674,29 +682,29 @@ def PINN(processor, x, y, z, xbc_wall, ybc_wall, zbc_wall, x_scale,	y_scale, z_s
 			print('TOTAL AVERAGE LOSS OF NN - MODEL', mod ,' [EPOCH =', epoch,']: \nNSE LOSS     :', (loss_nse/N).item(), '\nCONT LOSS    :', (loss_cont/N).item(), 
 			"\nBC LOSS      :", (loss_bc/N).item(), "\nDATA LOSS    :", (loss_data/N).item(), "\nINLET LOSS   :", (loss_inlet/N).item(), "\nTOTAL LOSS   :", total_loss.item())
 			print("LAMBDA PARAMETERS:")
-			print("NSE  =", f"{W_NSE.item():10.6}", "BC    =", f"{W_BC.item():10.6}", "\nDATA =", f"{W_DATA.item():10.6}", "CONT =", f"{W_CONT.item():10.6}", "INLET =", f"{W_INLET.item():10.6}")
+			print("NSE  =", f"{W_NSE.item():10.6}", "BC   =", f"{W_BC.item():10.6}", "\nDATA =", f"{W_DATA.item():10.6}", "CONT =", f"{W_CONT.item():10.6}", "INLET =", f"{W_INLET.item():10.6}")
 			print('LEARNING RATE:', optim_UNN.param_groups[0]['lr'])
 			print ("*"*85)
 
 			# SAVE THE NETWORK DATA AND LOSS DATA FOR EVERY 100 EPOCHS
 			# NETWORK DATA
-			torch.save(P_NN.state_dict(), path + "Pressure"   + "_M_" + str(mod) + ".pt")
-			torch.save(U_NN.state_dict(), path + "U_velocity" + "_M_" + str(mod) + ".pt")
-			torch.save(V_NN.state_dict(), path + "V_Velocity" + "_M_" + str(mod) + ".pt")
-			torch.save(W_NN.state_dict(), path + "W_Velocity" + "_M_" + str(mod) + ".pt")
+			torch.save(P_NN.state_dict(), path + "Pressure"   + "_M_" + str(mod) + "_cycle_V" +".pt")
+			torch.save(U_NN.state_dict(), path + "U_velocity" + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(V_NN.state_dict(), path + "V_Velocity" + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(W_NN.state_dict(), path + "W_Velocity" + "_M_" + str(mod) + "_cycle_V" + ".pt")
 
 			# LOSS DATA
-			torch.save(Loss_NSE   [0 : epoch], path + "Loss_NSE"   + "_M_" + str(mod) + ".pt")
-			torch.save(Loss_CONT  [0 : epoch], path + "Loss_CONT"  + "_M_" + str(mod) + ".pt")
-			torch.save(Loss_BC    [0 : epoch], path + "Loss_BC"    + "_M_" + str(mod) + ".pt")
-			torch.save(Loss_Data  [0 : epoch], path + "Loss_Data"  + "_M_" + str(mod) + ".pt")
-			torch.save(Loss_Inlet [0 : epoch], path + "Loss_Inlet" + "_M_" + str(mod) + ".pt")
+			torch.save(Loss_NSE   [0 : epoch], path + "Loss_NSE"   + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(Loss_CONT  [0 : epoch], path + "Loss_CONT"  + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(Loss_BC    [0 : epoch], path + "Loss_BC"    + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(Loss_Data  [0 : epoch], path + "Loss_Data"  + "_M_" + str(mod) + "_cycle_V" + ".pt")
+			torch.save(Loss_Inlet [0 : epoch], path + "Loss_Inlet" + "_M_" + str(mod) + "_cycle_V" + ".pt")
 			
 			# ADAPTIVE ACTIVATION FUNCTION
-			torch.save(au1, path + "AAF_AUE" + "_M_"+ str(mod) + ".pt")
-			torch.save(av1, path + "AAF_AVE" + "_M_"+ str(mod) + ".pt")
-			torch.save(aw1, path + "AAF_AWE" + "_M_"+ str(mod) + ".pt")
-			torch.save(ap1, path + "AAF_APE" + "_M_"+ str(mod) + ".pt")				
+			torch.save(au1, path + "AAF_AUE" + "_M_"+ str(mod) + "_cycle_V" + ".pt")
+			torch.save(av1, path + "AAF_AVE" + "_M_"+ str(mod) + "_cycle_V" + ".pt")
+			torch.save(aw1, path + "AAF_AWE" + "_M_"+ str(mod) + "_cycle_V" + ".pt")
+			torch.save(ap1, path + "AAF_APE" + "_M_"+ str(mod) + "_cycle_V" + ".pt")				
 
 			# IMPOSE DYNAMIC LEARNING RATE
 
@@ -731,8 +739,8 @@ processor = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("AVAILABLE PROCESSOR:", processor, '\n')
 
 # ***** HYPER PARAMETERS FOR THE NEURAL NETWORK
-batchsize  = 8192                                 	    # No. of data points in a whole dataset
-epochs     = 750                                   	# No. of Iterations
+batchsize  = 12288                                 	    # No. of data points in a whole dataset
+epochs     = 750                                   	 # No. of Iterations
 input_VAR  = 3                                       	# No. of Flow variables
 neurons    = 128                                     	# No. of Neurons in a layer
 
@@ -740,15 +748,15 @@ neurons    = 128                                     	# No. of Neurons in a laye
 n 		   = 1.0  										# Scaling factor			
 
 # ***** FILENAMES TO READ & WRITE THE DATA
-mesh 		= "LDA_upstream_data_0.vtk"
-sensor_file	= "LDA_upstream_data_"
+mesh 		= "LDA_usptream_data_0.vtk"
+sensor_file	= "LDA_usptream_data_"
 bc_wall     = "Wall_LDA_Stenosis.vtk"
 start_file  = 0
 end_file    = 400
 step_file   = 1
 Nfile       = (end_file - start_file) + 1
 fieldname  = 'pressure' 
-Nslice      = 5
+Nslice      = 3
 
 # ***** LOCATION TO READ AND WRITE THE DATA
 directory 	= os.getcwd()  								# GET THE CURRENT WORKING DIRECTORY  
@@ -758,15 +766,15 @@ sensor_file = path + sensor_file
 bc_wall     = path + bc_wall
 
 # ***** NORMALISATION OF FLOW VARIABLES
-x_scale		= 0.208662
-y_scale 	= 0.326006
-z_scale		= 0.317616
+x_scale		= 0.170953
+y_scale 	= 0.30187
+z_scale		= 0.310876
 
 # ***** SENSOR MESH DATA
-xmin, xmax  = 0.066163, 0.143461
-ymin, ymax  = 0.144274, 0.178394
-zmin, zmax  = 0.156519, 0.168698
-xplane, yplane, zplane = 0.905481, 0.399689, 0.142667
+xmin, xmax  = 0.068083, 0.101953
+ymin, ymax  = 0.142992, 0.158558
+zmin, zmax  = 0.152598, 0.158143
+xplane, yplane, zplane = 0.898737, 0.413066, 0.14713
 
 # ***** FLUID PROPERTIES
 density     = 1.06
@@ -774,7 +782,7 @@ diffusion   = 0.0377358
 
 # ***** FLAGS TO IMPROVE THE USER-INTERFACE
 Flag_Batch	= True  									# True  : ENABLES THE BATCH-WISE COMPUTATION
-Flag_Resume = False  									# False : STARTS FROM EPOCH = 0
+Flag_Resume = True  									# True  : IMPOSING PERIODICITY OVER TIME
 Flag_Dyn_LR = True 										# True  : DYNAMIC LEARNING RATE
 
 # ***** READING THE FILES
@@ -849,9 +857,9 @@ print ("*"*85)
 
 ''' ************************************* NORMALISATION OF VARIABLES *********************************************** '''
 # MESH POINTS
-x 		 = x / x_scale
-y 		 = y / y_scale
-z 		 = z / z_scale
+x 		 = x  / x_scale
+y 		 = y  / y_scale
+z 		 = z  / z_scale
 
 # WALL BOUNDARY POINTS
 xbc_wall = xbc_wall / x_scale
