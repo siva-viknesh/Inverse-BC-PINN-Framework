@@ -8,7 +8,7 @@ Pytorch codes are included for the different examples presented in the paper: <b
 
 - Idealized Stenosed Coronary Arteries
 -   Symmetric Stenosis
- * Asymmetric Stenosis
+-   Asymmetric Stenosis
 - Patient-specific LAD Stenosed Coronary Artery
  * Steady Flow 
  * Transient Flow
