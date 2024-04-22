@@ -19,7 +19,8 @@ Attaching the codes used for the paper:<br />
 Converting the results to VTK: The torch-to-vtk conversion Python programs can be found in PINN- Post Processing folder for both PINN and BC-PINN methodologies.
 
 <hr>
-Installation:
+
+**Installation:** <br />
 Install Pytorch:<br />
 https://pytorch.org/ <br />
 Install VTK after Pytorch is installed.
