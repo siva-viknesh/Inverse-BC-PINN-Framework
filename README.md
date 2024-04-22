@@ -20,8 +20,8 @@ Converting the results to VTK: The torch-to-vtk conversion Python programs can b
 
 <hr>
 Installation:
-Install Pytorch:
-https://pytorch.org/
+Install Pytorch:<br />
+https://pytorch.org/ <br />
 Install VTK after Pytorch is installed.
 
 An example with pip: <br />
