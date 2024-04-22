@@ -5,6 +5,7 @@ Utilizing Physics-informed neural networks (PINN) to compute 3D blood flow veloc
 Machine Learning Enhanced Hemodynamics: Constructing 3D Blood Flow Fields of Stenosed Coronary Arteries from Pressure Measurements, Siva Viknesh, Ethan Shoemaker, and Amirhossein Arzani
 <hr>
 Pytorch codes are included for the different examples presented in the paper: <br />
+
 - Idealized Stenosed Coronary Arteries
  * Symmetric Stenosis
  * Asymmetric Stenosis
