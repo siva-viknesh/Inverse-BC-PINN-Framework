@@ -7,8 +7,8 @@ Machine Learning Enhanced Hemodynamics: Constructing 3D Blood Flow Fields of Ste
 Pytorch codes are included for the different examples presented in the paper:<br />
 
 * Idealized Stenosed Coronary Arteries
- - Symmetric Stenosis
- - Asymmetric Stenosis
+  - Symmetric Stenosis
+  - Asymmetric Stenosis
 * Patient-specific LAD Stenosed Coronary Artery
   - Steady Flow 
   - Transient Flow
