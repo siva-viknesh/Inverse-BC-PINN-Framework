@@ -7,7 +7,7 @@ Attaching the programs used for the paper:<br />
 **Machine Learning Enhanced Hemodynamics: Constructing 3D Blood Flow Fields of Stenosed Coronary Arteries from Pressure Measurements, Siva Viknesh, Ethan Shoemaker, and Amirhossein Arzani**
 <hr>
 
-**PyTorch codes are included (along with their geometries) for the different examples presented in the paper:** <br />
+**PyTorch codes are included (along with their geometries) for the different examples presented in the paper:** 
 
 - Idealized Stenosed Coronary Arteries
   *   Symmetric Stenosis
