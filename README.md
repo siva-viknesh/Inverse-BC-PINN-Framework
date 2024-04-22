@@ -24,5 +24,5 @@ Install VTK after Pytorch is installed.
 An example with pip: <br />
 conda activate pytorch <br />
 pip install vtk<br />
-
+<hr>
 ![Model](https://github.com/siva-viknesh/Inverse-BC-PINN-Framework/blob/main/Patient-Specific%20LAD%20Coronary%20Artery/Figure.jpeg)
