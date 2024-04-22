@@ -6,11 +6,11 @@ Machine Learning Enhanced Hemodynamics: Constructing 3D Blood Flow Fields of Ste
 <hr>
 Pytorch codes are included for the different examples presented in the paper:
 * Idealized Stenosed Coronary Arteries
-  - Sub Symmetric Stenosis
-  - Sub Asymmetric Stenosis
-* Patient-Specific LAD Stenosed Coronary Artery
-  - Sub Steady Flow 
-  - Sub Transient Flow
+- Symmetric Stenosis
+- Asymmetric Stenosis
+* Patient-specific LAD Stenosed Coronary Artery
+- Steady Flow 
+- Transient Flow
 <hr>
 Converting the results to VTK: The torch-to-vtk conversion Python programs can be found in PINN- Post Processing folder for both PINN and BC-PINN methodologies. 
 <hr>
