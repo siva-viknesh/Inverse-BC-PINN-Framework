@@ -1,1 +1,1 @@
-### The Artery VTK file can be found [here](https://uofutah-my.sharepoint.com/:u:/g/personal/u1447701_umail_utah_edu/EUxpMVqfRAJIpOyc140qSAcBDF2pTSuy9kWG48s1589xCQ?e=W4b0hb) 
+### The asymmetric stenosed coronary artery files can be found [here](https://uofutah-my.sharepoint.com/:u:/g/personal/u1447701_umail_utah_edu/EUxpMVqfRAJIpOyc140qSAcBDF2pTSuy9kWG48s1589xCQ?e=W4b0hb) 
