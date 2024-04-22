@@ -10,8 +10,8 @@ Pytorch codes are included for the different examples presented in the paper: <b
   *   Symmetric Stenosis
   *   Asymmetric Stenosis
 - Patient-specific LAD Stenosed Coronary Artery
- * Steady Flow 
- * Transient Flow
+  * Steady Flow 
+  * Transient Flow
 <hr>
 Converting the results to VTK: The torch-to-vtk conversion Python programs can be found in PINN- Post Processing folder for both PINN and BC-PINN methodologies. 
 <hr>
