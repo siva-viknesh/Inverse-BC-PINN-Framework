@@ -20,4 +20,4 @@ Converting the results to VTK: The torch-to-vtk conversion Python programs can b
 
 <hr>
 
-![Model](https://github.com/siva-viknesh/Inverse-BC-PINN-Framework/blob/main/Patient-Specific%20LAD%20Coronary%20Artery/Figure.jpeg)
+![Model](https://github.com/siva-viknesh/Inverse-BC-PINN-Framework/blob/main/2_Patient-Specific%20LAD%20Coronary%20Artery/Figure.jpeg)
